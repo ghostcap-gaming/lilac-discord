@@ -4,18 +4,25 @@
 
 #define WEBHOOK ""
 
+char g_sServerName[256];
+
 public Plugin myinfo = 
 {
 	name = "[LilAC] Discord",
 	author = "Cruze",
 	description = "Send a webhook when cheater is detected.",
-	version = "1.0",
+	version = "1.1",
 	url = "https://github.com/Cruze03"
 };
 
 public void OnPluginStart()
 {
 	RegAdminCmd("sm_la_discord_test", Command_Test, ADMFLAG_ROOT);
+}
+
+public void OnMapStart()
+{
+	FindConVar("hostname").GetString(g_sServerName, 256);
 }
 
 public Action Command_Test(int client, int args)
@@ -117,6 +124,8 @@ public void lilac_cheater_detected(int client, int cheat)
 	}
 	
 	embed.AddField("Type:", buffer, true);
+	
+	embed.SetFooter( g_sServerName );
 	
 	hook.Embed(embed);
 	hook.Send();
